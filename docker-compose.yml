@@ -1,0 +1,53 @@
+version: "3.7"
+services:
+  db:
+    image: "postgres:12.0"
+    ports:
+      - "5432:5432"
+    volumes:
+      - bbl-volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: bbl
+      POSTGRES_PASSWORD: bbl
+      POSTGRES_DB: bbl
+    networks:
+      - backend
+  smtp:
+    image: "mailhog/mailhog"
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - backend
+      - frontend
+  api:
+    image: "bbl-docker-api:latest"
+    build: "./api"
+    environment:
+      DS_HOST: db
+      SMTP_HOST: smtp
+    ports:
+      - "8080:8080"
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - db
+      - smtp
+  app:
+    image: "bbl-docker-app:latest"
+    build: "./app"
+    ports:
+      - "4200:80"
+    environment:
+      ENVIRONMENT: "production"
+      API_URL: "http://api:8080"
+    networks:
+      - frontend
+    depends_on:
+      - api
+volumes:
+  bbl-volume:
+networks:
+  backend:
+  frontend:

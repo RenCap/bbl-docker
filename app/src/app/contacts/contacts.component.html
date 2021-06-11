@@ -1,0 +1,42 @@
+<mat-sidenav-container autosize>
+  <mat-sidenav mode="side" opened disableClose="true">
+    <mat-action-list>
+      <mat-list-item *ngFor="let contact of contacts" (click)="display(contact)">
+        <mat-icon mat-list-icon>face</mat-icon>
+        <h1 mat-line>{{contact.lastName | uppercase}} {{contact.firstName | titlecase}}</h1>
+        <p mat-line>{{contact.email}}</p>
+      </mat-list-item>
+    </mat-action-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-card *ngIf="getSelectedContactAttr('id').value">
+      <form [formGroup]="selectedContact">
+        <mat-card-title>
+          {{getSelectedContactAttr('lastName').value | uppercase}} {{getSelectedContactAttr('firstName').value | titlecase}}
+        </mat-card-title>
+        <mat-card-subtitle>
+          {{getSelectedContactAttr('email').value}}
+        </mat-card-subtitle>
+        <mat-card-content>
+          <mat-form-field>
+            <input matInput placeholder="Objet" formControlName="subject">
+          </mat-form-field>
+          <mat-form-field>
+          <textarea matInput placeholder="Message" formControlName="message" cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="15"></textarea>
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions>
+          <button type="submit" mat-button color="primary" (click)="send()">
+            Envoyer
+          </button>
+          <button mat-button (click)="cancel()">
+            Annuler
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+  </mat-sidenav-content>
+</mat-sidenav-container>
