@@ -18,7 +18,6 @@ services:
   smtp:
     image: "mailhog/mailhog"
     ports:
-      - "1025:1025"
       - "8025:8025"
     networks:
       - backend
@@ -46,8 +45,7 @@ services:
     ports:
       - "4200:80"
     environment:
-      ENVIRONMENT: "production"
-      API_URL: "http://api:8080"
+      API_URL: "http://changeme:8080"
     depends_on:
       - api
     networks:

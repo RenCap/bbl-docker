@@ -19,7 +19,6 @@ services:
       - "8025:8025"
     networks:
       - backend
-      - frontend
   api:
     image: "bbl-docker-api:latest"
     build: "./api"
@@ -40,8 +39,7 @@ services:
     ports:
       - "4200:80"
     environment:
-      ENVIRONMENT: "production"
-      API_URL: "http://api:8080"
+      API_URL: "http://localhost:8080"
     networks:
       - frontend
     depends_on:
