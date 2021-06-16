@@ -35,17 +35,21 @@ export class ContactsComponent implements OnInit {
   }
 
   send() {
-    this.contactService.sendEmail({
-      contactId: this.getSelectedContactAttr('id').value,
-      subject: this.getSelectedContactAttr('subject').value,
-      message: this.getSelectedContactAttr('message').value
-    })
-      .subscribe(
-        () => {
-          this.cancel();
-          this.showError('Email envoyé');
-        },
-        () => this.showError('Une erreur est survenue'));
+    if (this.selectedContact.valid) {
+      this.contactService.sendEmail({
+        contactId: this.getSelectedContactAttr('id').value,
+        subject: this.getSelectedContactAttr('subject').value,
+        message: this.getSelectedContactAttr('message').value
+      })
+        .subscribe(
+          () => {
+            this.cancel();
+            this.showMessage('Email envoyé');
+          },
+          () => this.showMessage('Une erreur est survenue'));
+    } else {
+      this.showMessage('Veuillez remplir les champs requis');
+    }
   }
 
   cancel() {
@@ -54,7 +58,7 @@ export class ContactsComponent implements OnInit {
 
   getSelectedContactAttr = (attr: string) => defaultObj(this.selectedContact.get(attr));
 
-  private showError(message: string) {
+  private showMessage(message: string) {
     this.snackBar.open(message, '', {
       duration: 2000
     });
